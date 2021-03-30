@@ -3,10 +3,10 @@
   <div class="content">
     <div class="content_input">
       <div class="title"><p>管理员登录</p></div>
-      <el-input v-model="UserName" clearable placeholder="用户名" />
-      <el-input v-model="PassWord" clearable show-password placeholder="密码" />
+      <el-input v-model="userName" clearable placeholder="用户名" />
+      <el-input v-model="passWord" clearable show-password placeholder="密码" />
       <div class="content_button">
-        <el-button type="primary" @click="SignIn">登录</el-button>
+        <el-button type="primary" @click="signIn">{{ btnText }}</el-button>
       </div>
     </div>
   </div>
@@ -17,30 +17,33 @@ import ribbon from '../../util/ribbon'
 export default {
     data() {
         return {
-            UserName: 'admin',
-            PassWord: '1'
+            userName: 'admin',
+            passWord: '1',
+            isBtnLoading: false
+        }
+    },
+    computed: {
+        btnText() {
+            if (this.isBtnLoading) return '登录中...'
+            return '登录'
         }
     },
     methods: {
-        SignIn() {
-            const username = this.UserName
-            const password = this.PassWord
+        signIn() {
+            const username = this.userName
+            const password = this.passWord
             if (!username) {
-                this.$message({
-                    message: '用户名不能为空',
-                    type: 'error'
-                })
+                this.$message.error('请填写用户名!!!')
                 return
-            } else if (!password) {
-                this.$message({
-                    message: '密码不能为空',
-                    type: 'error'
-                })
-                return
-            } else {
-                // this.$message({ message: '恭喜你，通过了！', type: 'success' })
-                this.$router.push({ name: 'Home' })
             }
+            if (!password) {
+                this.$message.error('密码不能为空!!!')
+                return
+            }
+            this.isBtnLoading = true
+            setTimeout(() => {
+                this.$router.push({ name: 'Home' })
+            }, 1000)
         }
     }
 }
@@ -63,6 +66,7 @@ export default {
 	overflow: hidden;
 	transition: 1.5s;
 }
+
 @keyframes mymove {
 	0% {
 		width: 0px;
